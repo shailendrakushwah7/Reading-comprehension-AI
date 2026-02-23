@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC Vocabulary AI - Learn Smart</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">📚</span>
+                    <h1>RC Vocabulary AI</h1>
+                </div>
+                <div class="header-controls">
+                    <button class="mode-toggle" id="modeToggle" title="Toggle Beginner/Advanced Mode">
+                        <span class="mode-text">Beginner</span>
+                    </button>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="section-title">
+                    <h2>Paste Your RC Passage</h2>
+                    <p>Advanced vocabulary extraction powered by AI</p>
+                </div>
+
+                <div class="input-container">
+                    <textarea
+                        id="passageInput"
+                        class="passage-input"
+                        placeholder="Paste your RC passage here... (up to 3000 words)"
+                        rows="8"
+                    ></textarea>
+                    <div class="input-actions">
+                        <span class="char-count"><span id="charCount">0</span>/15000</span>
+                        <button class="btn btn-primary" id="analyzeBtn">
+                            <span class="btn-text">Analyze Passage</span>
+                            <span class="btn-loading" style="display: none;">
+                                <span class="spinner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section class="stats-section" id="statsSection" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalWordsCard">15</div>
+                        <div class="stat-label">Vocabulary Words</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="wordCountCard">250</div>
+                        <div class="stat-label">Words in Passage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number difficulty-medium" id="difficultyScoreCard">65</div>
+                        <div class="stat-label">Difficulty Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="difficulty-breakdown" id="difficultyBreakdown">
+                            <span><span class="diff-easy">●</span> 5</span>
+                            <span><span class="diff-medium">●</span> 7</span>
+                            <span><span class="diff-hard">●</span> 3</span>
+                        </div>
+                        <div class="stat-label">Easy • Medium • Hard</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabs Section -->
+            <section class="tabs-section" id="tabsSection" style="display: none;">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="vocabulary">
+                        <span class="tab-icon">📖</span> Vocabulary
+                    </button>
+                    <button class="tab-btn" data-tab="passage">
+                        <span class="tab-icon">✨</span> Highlighted Passage
+                    </button>
+                    <button class="tab-btn" data-tab="summary">
+                        <span class="tab-icon">📝</span> Summary
+                    </button>
+                    <button class="tab-btn" data-tab="quiz">
+                        <span class="tab-icon">❓</span> Quiz
+                    </button>
+                </div>
+
+                <!-- Vocabulary Tab -->
+                <div class="tab-content active" data-tab="vocabulary">
+                    <div class="vocab-actions">
+                        <input
+                            type="text"
+                            class="search-input"
+                            id="searchInput"
+                            placeholder="Search vocabulary..."
+                        >
+                        <button class="btn btn-secondary" id="copyAllBtn">
+                            <span>📋 Copy All</span>
+                        </button>
+                    </div>
+                    <div class="vocab-cards" id="vocabCards"></div>
+                </div>
+
+                <!-- Highlighted Passage Tab -->
+                <div class="tab-content" data-tab="passage">
+                    <div class="passage-display" id="highlightedPassage"></div>
+                </div>
+
+                <!-- Summary Tab -->
+                <div class="tab-content" data-tab="summary">
+                    <div class="loading-spinner" id="summaryLoading" style="display: none;">
+                        <span class="spinner"></span>
+                        <p>Generating summary...</p>
+                    </div>
+                    <div class="summary-box" id="summaryBox" style="display: none;"></div>
+                    <button class="btn btn-secondary" id="generateSummaryBtn" style="display: none;">
+                        Generate Summary
+                    </button>
+                </div>
+
+                <!-- Quiz Tab -->
+                <div class="tab-content" data-tab="quiz">
+                    <div id="quizContainer" style="display: none;"></div>
+                    <button class="btn btn-secondary" id="generateQuizBtn" style="display: none;">
+                        <span>Generate Quiz</span>
+                        <span class="btn-loading" style="display: none;">
+                            <span class="spinner"></span>
+                        </span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Saved Words Section -->
+            <section class="saved-section" id="savedSection" style="display: none;">
+                <div class="section-title">
+                    <h2>📌 Saved Words</h2>
+                    <button class="btn btn-small" id="clearSavedBtn">Clear All</button>
+                </div>
+                <div class="saved-words" id="savedWords"></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Modal for Word Details -->
+    <div class="modal" id="wordModal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body">
+                <h3 id="modalWord"></h3>
+                <p id="modalMeaning"></p>
+                <div id="modalExample"></div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="pronounceBtn">
+                        🔊 Pronounce
+                    </button>
+                    <button class="btn btn-secondary" id="saveWordBtn">
+                        💾 Save Word
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
